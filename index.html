@@ -12,40 +12,58 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     overflow: hidden;
 }
+
+/* Koperta */
+.envelope {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 100px solid #ff4e50;
+    transform-origin: top;
+    transition: transform 1s ease;
+}
+
+.open .flap {
+    transform: rotateX(180deg);
+}
+
+.envelope-text {
+    z-index: 2;
+    font-weight: bold;
+}
+
+/* Kartka */
 .card {
+    display: none;
     background: white;
     padding: 40px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-    animation: fadeIn 2s ease-in-out;
+    animation: fadeIn 1.5s ease-in-out;
 }
-h1 {
-    color: #ff4e50;
-}
-p {
-    font-size: 20px;
-}
-.heart {
-    position: absolute;
-    color: white;
-    font-size: 24px;
-    animation: float 6s linear infinite;
-}
-@keyframes float {
-    0% { transform: translateY(100vh); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-10vh); opacity: 0; }
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
+
 button {
-    margin-top: 20px;
+    margin: 10px;
     padding: 10px 20px;
     border: none;
     background: #ff4e50;
@@ -54,24 +72,74 @@ button {
     cursor: pointer;
     font-size: 16px;
 }
+
 button:hover {
     background: #e43e40;
+}
+
+.heart {
+    position: absolute;
+    color: white;
+    font-size: 24px;
+    animation: float 6s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
 }
 </style>
 </head>
 <body>
 
-<div class="card">
-    <h1>Dla Ciebie mojej MILUSIIII❤️</h1>
+<div class="envelope" onclick="openEnvelope()" id="envelope">
+    <div class="flap"></div>
+    <div class="envelope-text">Kliknij, aby otworzyć 💌</div>
+</div>
+
+<div class="card" id="card">
+    <h1>Czy zostaniesz moją Walentynką? ❤️</h1>
+    <button onclick="sayYes()">TAK 💖</button>
+    <button id="noBtn" onmouseover="moveButton()">NIE 😅</button>
+</div>
+
+<div class="card" id="finalCard">
+    <h1>Dla Ciebie ❤️</h1>
     <p>
         Każdy dzień z Tobą jest moją ulubioną historią.<br>
         Dziękuję, że jesteś 💕<br><br>
         Kocham Cię.
     </p>
-    <button onclick="alert('Zawsze i na zawsze, Twój KAJKO 💖')">Kliknij mnie</button>
 </div>
 
 <script>
+function openEnvelope() {
+    document.getElementById("envelope").classList.add("open");
+    setTimeout(() => {
+        document.getElementById("envelope").style.display = "none";
+        document.getElementById("card").style.display = "block";
+    }, 1000);
+}
+
+function sayYes() {
+    document.getElementById("card").style.display = "none";
+    document.getElementById("finalCard").style.display = "block";
+    setInterval(createHeart, 300);
+}
+
+function moveButton() {
+    const button = document.getElementById("noBtn");
+    button.style.position = "absolute";
+    button.style.left = Math.random() * 80 + "vw";
+    button.style.top = Math.random() * 80 + "vh";
+}
+
 function createHeart() {
     const heart = document.createElement("div");
     heart.classList.add("heart");
@@ -79,14 +147,10 @@ function createHeart() {
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
     document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 6000);
+    setTimeout(() => { heart.remove(); }, 6000);
 }
-
-setInterval(createHeart, 300);
 </script>
 
 </body>
 </html>
+
